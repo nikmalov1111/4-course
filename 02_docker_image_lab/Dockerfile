@@ -25,10 +25,9 @@ WORKDIR /app
 
 RUN adduser -D -u 10001 appuser
 
-COPY --chown=appuser:appuser --from=builder /wheels /wheels
-COPY --chown=appuser:appuser requirements.txt .
-
-RUN pip install --no-index --find-links=/wheels -r requirements.txt
+RUN --mount=type=bind,from=builder,source=/wheels,target=/wheels \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    pip install --no-index --find-links=/wheels -r requirements.txt
 
 COPY --chown=appuser:appuser app/ .
 
