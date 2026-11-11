@@ -6,6 +6,7 @@ import encrypt_aes
 import metrics
 from src import SHAChecker, PNGParser, key_sensitivity
 
+print("Путь к файлу meta.json:")
 meta_path = input()
 if meta_path == "":
     meta_path = "metadata/meta.json"
