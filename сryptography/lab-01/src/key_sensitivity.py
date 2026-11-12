@@ -30,12 +30,14 @@ def key_sensitivity_test(source_image_path, algorithm):
         key2 = bytearray(key1)
         key2[0] ^= 0x01
         key2 = bytes(key2)
+        nonce = os.urandom(16)
 
+        print(f"nonce = {nonce}")
         print(f"Ключ 1: {key1}")
         print(f"Ключ 2: {key2}")
 
-        encrypt_aes.encrypt_aes_ctr(source_image_path, out1, key1)
-        encrypt_aes.encrypt_aes_ctr(source_image_path, out2, key2)
+        encrypt_aes.encrypt_aes_ctr(source_image_path, out1, key1, nonce)
+        encrypt_aes.encrypt_aes_ctr(source_image_path, out2, key2, nonce)
 
     elif algorithm == "aes-ecb":
         key1 = os.urandom(32)
