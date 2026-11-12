@@ -6,7 +6,8 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 import PNGParser
 
-def encrypt_aes_ecb(input_file, output_file, key, meta_path_ecb="metadata/meta_ecb.json"):
+def encrypt_aes_ecb(input_file, output_file, key):
+    meta_path_ecb = ""
     if os.path.isfile(input_file):
 
         parser = PNGParser.PNGParser(input_file)
@@ -23,9 +24,16 @@ def encrypt_aes_ecb(input_file, output_file, key, meta_path_ecb="metadata/meta_e
         parser.save(output_file, ciphertext[:original_len])
 
         meta = {
+            "source": input_file,
             "padding": ciphertext[original_len:].hex(),
             "original_len": original_len
         }
+
+        meta_path_ecb = "metadata/meta_ecb/meta_ecb"
+        i = 1
+        while os.path.isfile(f"{meta_path_ecb}({i}).json"):
+            i += 1
+        meta_path_ecb = f"{meta_path_ecb}({i}).json"
 
         with open(meta_path_ecb, 'w', encoding='utf-8') as f:
             json.dump(meta, f, indent=4)
@@ -34,7 +42,9 @@ def encrypt_aes_ecb(input_file, output_file, key, meta_path_ecb="metadata/meta_e
     else:
         print(f"Файла {input_file} не существует!")
 
-def decrypt_aes_ecb(input_file, output_file, key, meta_path_ecb="metadata/meta_ecb.json"):
+    return meta_path_ecb
+
+def decrypt_aes_ecb(input_file, output_file, key, meta_path_ecb):
     if os.path.isfile(meta_path_ecb):
         if os.path.isfile(input_file):
             with open(meta_path_ecb, 'r', encoding='utf-8') as f:
@@ -60,7 +70,7 @@ def decrypt_aes_ecb(input_file, output_file, key, meta_path_ecb="metadata/meta_e
         print(f"Метаданные {meta_path_ecb} отсутствуют!")
 
 
-def encrypt_aes_ctr(input_file, output_file, key, nonce=os.urandom(16), meta_path_ctr="metadata/meta_ctr.json"):
+def encrypt_aes_ctr(input_file, output_file, key, nonce):
     if os.path.isfile(input_file):
         parser = PNGParser.PNGParser(input_file)
         data = parser.get_raw_data()
@@ -69,8 +79,15 @@ def encrypt_aes_ctr(input_file, output_file, key, nonce=os.urandom(16), meta_pat
         ciphertext = encryptor.update(data) + encryptor.finalize()
 
         meta = {
+            "source": input_file,
             "nonce": base64.b64encode(nonce).decode('utf-8')
         }
+
+        meta_path_ctr = "metadata/meta_ctr/meta_ctr"
+        i = 1
+        while os.path.isfile(f"{meta_path_ctr}({i}).json"):
+            i += 1
+        meta_path_ctr = f"{meta_path_ctr}({i}).json"
 
         with open(meta_path_ctr, 'w', encoding='utf-8') as f:
             json.dump(meta, f, indent=4)
@@ -81,12 +98,7 @@ def encrypt_aes_ctr(input_file, output_file, key, nonce=os.urandom(16), meta_pat
     else:
         print(f"Файла {input_file} не существует!")
 
-def decrypt_aes_ctr(input_file, output_file, key, meta_path_ctr="metadata/meta_ctr.json"):
-    if os.path.isfile(meta_path_ctr):
-        with open(meta_path_ctr, 'r', encoding='utf-8') as f:
-            meta = json.load(f)
-        nonce = base64.b64decode(meta["nonce"].encode('utf-8'))
-
+def decrypt_aes_ctr(input_file, output_file, key, nonce):
         if os.path.isfile(input_file):
             parser = PNGParser.PNGParser(input_file)
             encrypted_data = parser.get_raw_data()
@@ -100,5 +112,3 @@ def decrypt_aes_ctr(input_file, output_file, key, meta_path_ctr="metadata/meta_c
             print(f"Файл успешно расшифрован алгоритмом AES_CTR и сохранен как: {output_file}")
         else:
             print(f"Файла {input_file} не существует!")
-    else:
-        print(f"Отсутствуют метаданные по пути: {meta_path_ctr}")
