@@ -77,7 +77,7 @@ if os.path.isfile(meta_path):
             decrypted_path = meta["decrypted_path"]
 
         if os.path.isfile(meta["source"]):
-            if ("algorithm" in meta) and (meta["algorithm"] in ("stream", "aes_ctr", "aes_ecb")):
+            if ("algorithm" in meta) and (meta["algorithm"] in ("stream", "aes-ctr", "aes-ecb")):
                 match meta["algorithm"]:
                     case "stream":
                         print(f"\nШифрование по методу: {meta['algorithm']}")
