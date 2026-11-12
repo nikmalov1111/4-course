@@ -6,7 +6,6 @@ import encrypt_aes
 import metrics
 from src import SHAChecker, PNGParser, key_sensitivity
 
-print("Путь к файлу meta.json:")
 meta_path = input()
 if meta_path == "":
     meta_path = "metadata/meta.json"
@@ -85,15 +84,21 @@ if os.path.isfile(meta_path):
                         stream_encryption.encrypt_decrypt_image(encrypted_path,decrypted_path,SECRET_SEED)
                     case "aes-ecb":
                         print(f"\nШифрование по методу: {meta['algorithm']}")
-                        encrypt_aes.encrypt_aes_ecb(meta["source"], encrypted_path, SECRET_KEY)
-                        encrypt_aes.decrypt_aes_ecb(encrypted_path, decrypted_path, SECRET_KEY)
+                        meta_path = encrypt_aes.encrypt_aes_ecb(meta["source"], encrypted_path, SECRET_KEY)
+                        encrypt_aes.decrypt_aes_ecb(encrypted_path, decrypted_path, SECRET_KEY, meta_path)
                     case "aes-ctr":
                         print(f"\nШифрование по методу: {meta['algorithm']}")
-                        if meta["nonce"] != "null":
-                            encrypt_aes.encrypt_aes_ctr(meta["source"], encrypted_path, SECRET_KEY, meta["nonce"])
+                        nonce: bytes
+                        if ("nonce" in meta) and (meta["nonce"] != "null"):
+                            nonce = bytes.fromhex(meta["nonce"].strip())
+                            if len(nonce) != 16:
+                                nonce = os.urandom(16)
                         else:
-                            encrypt_aes.encrypt_aes_ctr(meta["source"], encrypted_path, SECRET_KEY)
-                        encrypt_aes.decrypt_aes_ctr(encrypted_path, decrypted_path, SECRET_KEY)
+                            nonce = os.urandom(16)
+
+                        print(f"Используемый nonce: {nonce}")
+                        encrypt_aes.encrypt_aes_ctr(meta["source"], encrypted_path, SECRET_KEY, nonce)
+                        encrypt_aes.decrypt_aes_ctr(encrypted_path, decrypted_path, SECRET_KEY, nonce)
 
                 check_reversibility(meta["source"], decrypted_path)
                 print_metrics(meta["algorithm"], meta["source"], encrypted_path)
