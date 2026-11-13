@@ -4,9 +4,8 @@
 * Закрепить работу с устаревшим `--link` (для понимания исторического контекста).
 * Описать стек из 2 сервисов в `docker-compose.yml`.
 * Масштабировать сервисы средствами Docker Compose и корректно завершать стек.
+
 ---
-
-
 
 ## Ход выполнения
 
@@ -39,7 +38,6 @@ docker run -d -p 8085:5000 --link redis:redis --name rc rotorocloud/rocket-count
 Проверяем `docker ps`, кликабельность кнопки `GET A ROCKET` и обновление счётчика:
 
 
-
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/4.png"></img>
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/5.png"></img>
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/6.png"></img>
@@ -48,7 +46,6 @@ docker run -d -p 8085:5000 --link redis:redis --name rc rotorocloud/rocket-count
 Удаляем контейнеры `redis` и `rocketcounter`.
 
 ---
-
 
 ### Часть 2. Описание стека в `docker-compose.yml`
 Создаем каталог `/root/rocketcounter` и переходим в него.
@@ -82,7 +79,6 @@ docker compose ps
 ```
 
 
-
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/7.png"></img>
 
 
@@ -93,7 +89,6 @@ WARN[0000] C:\Users\nikma\Desktop\docker_labs\lab-03\root\rocketcounter\docker-c
 Что означает, что мы можем не указывать версию docker compose, так как современная версия больше не использует и не учитывает параметр `version` в начале файла `docker-compose.yml`.
 
 ---
-
 
 ### Часть 3. Масштабирование приложения
 Изменим публикацию портов на динамическую (эфемерные порты для каждого экземпляра):
@@ -126,6 +121,7 @@ docker compose up -d --scale rocketcounter=2
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/12.png"></img>
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/13.png"></img>
 
+---
 
 ### Часть 4. Полное уничтожение стека
 Применим:
@@ -142,6 +138,7 @@ docker compose down -v
 
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/15.png"></img>
 
+---
 
 ## Ответы на вопросы:
 1. Зачем в Ч.1 использовался `--link` и почему в Compose он не нужен?
