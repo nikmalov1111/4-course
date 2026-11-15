@@ -105,5 +105,16 @@ SSIM - (Structural Similarity Index Measure Индекс структурног�
 | Encrypted Random LSB 1% | 70.96646742813657 | 0.9999978919219916 | 0.520%        | 0.0     |
 | Encrypted Random LSB 5% | 64.15478450969286 | 0.9999908945604908 | 2.498%        | 0.0     |
 
-Карты размерности:
+Карты разности:
+
+
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/p-lsb_difference_map_1.png"><\img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/e-lsb_difference_map_1.png"><\img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/er-lsb_difference_map_1.png"><\img>
+
 Гистограммы (синие - исходное изображение, красные - со встроенным сообщением):
+
+
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/p-lsb_histogram_1.png"><\img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/e-lsb_histogram_1.png"><\img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/er-lsb_histogram_1.png"><\img>
