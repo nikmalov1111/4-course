@@ -12,7 +12,7 @@
 ### Часть 1. Запуск вручную (контейнеры `docker run`)
 Запускаем контейнер на образе `Redis` c именем `redis`:
 ```bash
-docker run -d --name redis -p 6379:6379 redis
+docker run -d --name redis redis
 ```
 
 
