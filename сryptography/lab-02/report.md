@@ -108,9 +108,9 @@ SSIM - (Structural Similarity Index Measure Индекс структурног�
 Карты разности:
 
 
-<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/p-lsb_difference_map_1.png"><\img>
-<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/e-lsb_difference_map_1.png"><\img>
-<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/er-lsb_difference_map_1.png"><\img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/p-lsb_difference_map_1.png"></img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/e-lsb_difference_map_1.png"></img>
+<img src="https://github.com/nikmalov1111/4-course/blob/main/%D1%81ryptography/lab-02/results/er-lsb_difference_map_1.png"></img>
 
 Гистограммы (синие - исходное изображение, красные - со встроенным сообщением):
 
