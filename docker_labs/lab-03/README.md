@@ -43,7 +43,7 @@ docker run -d -p 8085:5000 --link redis:redis --name rc rotorocloud/rocket-count
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/6.png"></img>
 
 
-Удаляем контейнеры `redis` и `rocketcounter`.
+Удаляем контейнеры `redis` и `rс`.
 
 ---
 
