@@ -3,7 +3,7 @@
 Пример структуры:
 ```json
 {
-  "algorithm": "p-lsb" | "e-lsb" | "er-lsb",
+  "algorithm": "p-lsb | e-lsb | er-lsb",
   "source": "your_path.png",
   "message": "your_message",
   "password": "your_password",
