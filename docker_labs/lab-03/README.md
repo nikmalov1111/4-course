@@ -82,6 +82,16 @@ docker compose ps
 <img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/7.png"></img>
 
 
+```bash
+
+curl.exe -s localhost:8085
+
+```
+
+
+<img src="https://github.com/nikmalov1111/4-course/blob/main/docker_labs/lab-03/images/16.png"></img>
+
+
 Можем наблюдать сообщение:
 ```bash
 WARN[0000] C:\Users\nikma\Desktop\docker_labs\lab-03\root\rocketcounter\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
