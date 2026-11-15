@@ -13,6 +13,12 @@
 }
 ```
 "algorithm", "source", "message", "password": имеют статус "required"
+
+
 "embedded_message_file": "your_path.png" | "../images/embededMessageFiles/"+algorithm+"_stego_file_" + str(i) + ".png"
+
+
 "percent1": "your_percent1" | "0.01"
+
+
 "percent2": "your_percent2" | "0.05"
