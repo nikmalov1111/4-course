@@ -1,0 +1,9 @@
+{
+  "algorithm": "er-lsb",
+  "source": "../images/tu-tu-du-du.png",
+  "message": "Hello, World!",
+  "password": "1234",
+  "embedded_message_file": "../images/embededMessageFiles/er-lsb_tu-tu-du-du.png",
+  "percent1": "0.01",
+  "percent2": "0.05"
+}
