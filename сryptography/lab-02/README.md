@@ -1,5 +1,5 @@
 ## Запуск программы
-Запуск осуществляется через файл main.py. В начале программа потребует ввести путь к файлу meta.json. По умолчанию он находить в ../metadata/meta.json.
+Запуск осуществляется через `файл main.py`. В начале программа потребует ввести путь к файлу `meta.json`. По умолчанию он находить в `../metadata/meta.json`.
 Пример структуры:
 ```json
 {
@@ -12,13 +12,13 @@
   "percent2": "0.05"
 }
 ```
-"algorithm", "source", "message", "password": имеют статус "required"
+`"algorithm"`, `"source"`, `"message"`, `"password"`: имеют статус required
 
 
-"embedded_message_file": "your_path.png" | "../images/embededMessageFiles/"+algorithm+"_stego_file_" + str(i) + ".png"
+`"embedded_message_file"`: "your_path.png" | "../images/embededMessageFiles/"+algorithm+"_stego_file_" + str(i) + ".png"
 
 
-"percent1": "your_percent1" | "0.01"
+`"percent1"`: "your_percent1" | "0.01"
 
 
-"percent2": "your_percent2" | "0.05"
+`"percent2"`: "your_percent2" | "0.05"
