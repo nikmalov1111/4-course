@@ -51,7 +51,7 @@ docker run -d -p 8085:5000 --link redis:redis --name rc rotorocloud/rocket-count
 Создаем каталог `/root/rocketcounter` и переходим в него.
 Создаем файл `docker-compose.yml` со всеми необходимыми требованиями:
 ```bash
-version "2"
+version: "2"
 
 services:
   redis:
