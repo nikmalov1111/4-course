@@ -161,9 +161,6 @@ def data_volume_sensitivity_test(meta: MetaHandler):
     if (percent1 > 1) or (percent1 < 0) or (percent2 > 1) or (percent2 < 0):
         raise ValueError("невалидные проценты")
 
-    nonce = os.urandom(12)
-    salt = os.urandom(16)
-
     output_file_1 = "../images/stego_1.png"
     output_file_2 = "../images/stego_2.png"
 
@@ -195,8 +192,8 @@ def data_volume_sensitivity_test(meta: MetaHandler):
         case "e-lsb":
             password = meta.password
             print("Тестируем на алгоритме EncryptedLSB")
-            EncryptedLSB.embed_message_in_png_with_nonce_and_salt(input_file, output_file_1, text_1, password, nonce, salt)
-            EncryptedLSB.embed_message_in_png_with_nonce_and_salt(input_file, output_file_2, text_2, password, nonce, salt)
+            EncryptedLSB.embed_message_in_png(input_file, output_file_1, text_1, password)
+            EncryptedLSB.embed_message_in_png(input_file, output_file_2, text_2, password)
             psnr_val1, ssim_val1, changed_ratio1, p_value1 = calculate_metrics(input_file, output_file_1)
             psnr_val2, ssim_val2, changed_ratio2, p_value2 = calculate_metrics(input_file, output_file_2)
             if (EncryptedLSB.extract_message_from_png(output_file_1, password) != text_1) or (EncryptedLSB.extract_message_from_png(output_file_2, password) != text_2):
@@ -205,8 +202,8 @@ def data_volume_sensitivity_test(meta: MetaHandler):
         case "er-lsb":
             password = meta.password
             print("Тестируем на алгоритме EncryptedRandomLSB")
-            EncryptedRandomLSB.embed_message_in_png_with_nonce_and_salt(input_file, output_file_1, text_1, password, nonce, salt)
-            EncryptedRandomLSB.embed_message_in_png_with_nonce_and_salt(input_file, output_file_2, text_2, password, nonce, salt)
+            EncryptedRandomLSB.embed_message_in_png(input_file, output_file_1, text_1, password)
+            EncryptedRandomLSB.embed_message_in_png(input_file, output_file_2, text_2, password)
             psnr_val1, ssim_val1, changed_ratio1, p_value1 = calculate_metrics(input_file, output_file_1)
             psnr_val2, ssim_val2, changed_ratio2, p_value2 = calculate_metrics(input_file, output_file_2)
             if (EncryptedRandomLSB.extract_message_from_png(output_file_1, password) != text_1) or (EncryptedRandomLSB.extract_message_from_png(output_file_2, password) != text_2):
