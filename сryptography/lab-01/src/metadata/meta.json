@@ -1,7 +1,12 @@
 {
-  "algorithm": "stream",
-  "nonce": "null",
+  "action": "encrypt",
+  "algorithm": "aes-ctr",
   "source": "../images/tu-tu-du-du.png",
+  "seed": "null",
+  "secret_key": "12345",
+  "nonce": "null",
+  "salt": "null",
   "decrypted_path": "null",
-  "encrypted_path": "null"
+  "encrypted_path": "null",
+  "meta_for_decrypt": "null"
 }
