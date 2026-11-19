@@ -13,6 +13,13 @@ class PNGParser:
     def get_pixels(self):
         return self.pixels
 
+    def get_width(self):
+        return self.width
+
+    def get_height(self):
+        return self.height
+
+    
     def save_as_png_with_new_pixels(self, outfile_path: str, pixels: list):
         greyscale = self.meta.get('greyscale', False)
         alpha = self.meta.get('alpha', False)
