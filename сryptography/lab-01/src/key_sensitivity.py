@@ -1,4 +1,7 @@
 import os
+import random
+import string
+
 import encrypt_aes
 import stream_encryption
 from PNGParser import PNGParser
@@ -26,21 +29,29 @@ def key_sensitivity_test(source_image_path, algorithm):
     out2 = "../images/encrypted/encrypted_k2.png"
 
     if algorithm == "aes-ctr":
-        key1 = os.urandom(32)
+        characters = string.ascii_letters + string.digits
+        secret = ''.join(random.choice(characters) for _ in range(10))
+        salt = os.urandom(16)
+        key1 = encrypt_aes.derive_key(secret, salt)
         key2 = bytearray(key1)
         key2[0] ^= 0x01
         key2 = bytes(key2)
         nonce = os.urandom(16)
 
+
+
         print(f"nonce = {nonce}")
         print(f"Ключ 1: {key1}")
         print(f"Ключ 2: {key2}")
 
-        encrypt_aes.encrypt_aes_ctr(source_image_path, out1, key1, nonce)
-        encrypt_aes.encrypt_aes_ctr(source_image_path, out2, key2, nonce)
+        encrypt_aes.encrypt_aes_ctr_for_test(source_image_path, out1, key1, nonce)
+        encrypt_aes.encrypt_aes_ctr_for_test(source_image_path, out2, key2, nonce)
 
     elif algorithm == "aes-ecb":
-        key1 = os.urandom(32)
+        characters = string.ascii_letters + string.digits
+        secret = ''.join(random.choice(characters) for _ in range(10))
+        salt = os.urandom(16)
+        key1 = encrypt_aes.derive_key(secret, salt)
         key2 = bytearray(key1)
         key2[0] ^= 0x01
         key2 = bytes(key2)
@@ -48,8 +59,8 @@ def key_sensitivity_test(source_image_path, algorithm):
         print(f"Ключ 1: {key1}")
         print(f"Ключ 2: {key2}")
 
-        encrypt_aes.encrypt_aes_ecb(source_image_path, out1, key1)
-        encrypt_aes.encrypt_aes_ecb(source_image_path, out2, key2)
+        encrypt_aes.encrypt_aes_ecb_for_test(source_image_path, out1, key1)
+        encrypt_aes.encrypt_aes_ecb_for_test(source_image_path, out2, key2)
 
     elif algorithm == "stream":
         seed1 = 1234567890

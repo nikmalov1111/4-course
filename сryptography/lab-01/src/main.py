@@ -1,20 +1,17 @@
 import csv
-import json
 import os.path
 import stream_encryption
 import encrypt_aes
 import metrics
-from src import SHAChecker, PNGParser, key_sensitivity
+from src import SHAChecker, PNGParser, key_sensitivity, MetaHandler
 
 meta_path = input()
-if meta_path == "":
-    meta_path = "metadata/meta.json"
 
-SECRET_SEED = 1234567890
-SECRET_KEY = os.urandom(32)
+if os.path.isfile(meta_path):
+    meta =  MetaHandler.MetaHandler(meta_path)
+else:
+    meta = MetaHandler.MetaHandler("metadata/meta.json")
 
-default_png_encrypted_path = "../images/encrypted/"
-default_png_decrypted_path = "../images/decrypted/"
 metrics_path = "../results/"
 histogram_path = "../results/"
 
@@ -31,7 +28,6 @@ def check_reversibility(source_path, decrypted_path):
         print("Изображения совпадают по SHA256")
     else:
         print("Изображения НЕ совпадают по SHA256")
-
 
 def print_metrics(algorithm, source_path, encrypted_path):
     print("\nМетрики:")
@@ -58,57 +54,59 @@ def print_metrics(algorithm, source_path, encrypted_path):
     print(f"Результаты метрик сохранены в {metrics_path+algorithm+".csv"}")
 
 
+if meta.action == "encrypt":
+    print(f"\nШифрование по методу: {meta.algorithm}")
+    match meta.algorithm:
+        case "stream":
+            stream_encryption.encrypt_decrypt_image(meta.source, meta.encrypted_path, meta.seed)
+            stream_encryption.encrypt_decrypt_image(meta.encrypted_path, meta.decrypted_path, meta.seed)
+        case "aes-ecb":
+            salt: bytes
+            if meta.salt != "null":
+                salt = bytes.fromhex(meta.salt.strip())
+                if len(salt) != 16:
+                    raise Exception("невалидный nonce")
 
-
-
-
-
-if os.path.isfile(meta_path):
-    with open(meta_path, 'r', encoding='utf-8') as f:
-        meta = json.load(f)
-
-    if ("algorithm" in meta) and ("source" in meta):
-        encrypted_path = default_png_encrypted_path + meta["algorithm"] +"_png_encrypted.png"
-        decrypted_path = default_png_decrypted_path + meta["algorithm"] +"_png_decrypted.png"
-        if ("encrypted_path" in meta) and (meta["encrypted_path"] != "null"):
-            encrypted_path = meta["encrypted_path"]
-        if ("decrypted_path" in meta) and (meta["decrypted_path"] != "null"):
-            decrypted_path = meta["decrypted_path"]
-
-        if os.path.isfile(meta["source"]):
-            if ("algorithm" in meta) and (meta["algorithm"] in ("stream", "aes-ctr", "aes-ecb")):
-                match meta["algorithm"]:
-                    case "stream":
-                        print(f"\nШифрование по методу: {meta['algorithm']}")
-                        stream_encryption.encrypt_decrypt_image(meta["source"],encrypted_path,SECRET_SEED)
-                        stream_encryption.encrypt_decrypt_image(encrypted_path,decrypted_path,SECRET_SEED)
-                    case "aes-ecb":
-                        print(f"\nШифрование по методу: {meta['algorithm']}")
-                        meta_path = encrypt_aes.encrypt_aes_ecb(meta["source"], encrypted_path, SECRET_KEY)
-                        encrypt_aes.decrypt_aes_ecb(encrypted_path, decrypted_path, SECRET_KEY, meta_path)
-                    case "aes-ctr":
-                        print(f"\nШифрование по методу: {meta['algorithm']}")
-                        nonce: bytes
-                        if ("nonce" in meta) and (meta["nonce"] != "null"):
-                            nonce = bytes.fromhex(meta["nonce"].strip())
-                            if len(nonce) != 16:
-                                nonce = os.urandom(16)
-                        else:
-                            nonce = os.urandom(16)
-
-                        print(f"Используемый nonce: {nonce}")
-                        encrypt_aes.encrypt_aes_ctr(meta["source"], encrypted_path, SECRET_KEY, nonce)
-                        encrypt_aes.decrypt_aes_ctr(encrypted_path, decrypted_path, SECRET_KEY, nonce)
-
-                check_reversibility(meta["source"], decrypted_path)
-                print_metrics(meta["algorithm"], meta["source"], encrypted_path)
-                key_sensitivity.key_sensitivity_test(meta["source"], meta["algorithm"])
-                metrics.histogram(meta["source"], encrypted_path, histogram_path + meta['algorithm'] + "-histograms.png")
             else:
-                print(f"В файле {meta_path} отсутствует или неверно поле algorithm")
-        else:
-            raise FileNotFoundError(f"Файл {meta["source"]} не найден")
-    else:
-        print(f"Отсутствуют требуемые поля в {meta_path}")
-else:
-    raise FileNotFoundError(f"Файл {meta_path} с метаданными не найден")
+                salt = os.urandom(16)
+
+            meta_path = encrypt_aes.encrypt_aes_ecb(meta.source, meta.encrypted_path, meta.secret_key, salt)
+            encrypt_aes.decrypt_aes_ecb(meta.encrypted_path, meta.decrypted_path,  meta.secret_key, meta_path)
+        case "aes-ctr":
+            nonce: bytes
+            if meta.nonce != "null":
+                nonce = bytes.fromhex(meta.nonce.strip())
+                if len(nonce) != 16:
+                    raise Exception("невалидный nonce")
+            else:
+                nonce = os.urandom(16)
+
+            salt: bytes
+            if meta.salt != "null":
+                salt = bytes.fromhex(meta.salt.strip())
+                if len(salt) != 16:
+                    raise Exception("невалидный nonce")
+
+            else:
+                salt = os.urandom(16)
+
+            print(f"Используемый nonce: {nonce}")
+            meta_path = encrypt_aes.encrypt_aes_ctr(meta.source, meta.encrypted_path, meta.secret_key, salt, nonce)
+            encrypt_aes.decrypt_aes_ctr(meta.encrypted_path, meta.decrypted_path, meta.secret_key, meta_path)
+
+
+
+    check_reversibility(meta.source, meta.decrypted_path)
+    print_metrics(meta.algorithm, meta.source, meta.encrypted_path)
+    key_sensitivity.key_sensitivity_test(meta.source, meta.algorithm)
+    metrics.histogram(meta.source, meta.encrypted_path, histogram_path + meta.algorithm + "-histograms.png")
+
+elif meta.action == "decrypt":
+    print(f"\nДешифрование по методу: {meta.algorithm}")
+    match meta.algorithm:
+        case "stream":
+            stream_encryption.encrypt_decrypt_image(meta.source, meta.decrypted_path, meta.seed)
+        case "aes-ecb":
+            encrypt_aes.decrypt_aes_ecb(meta.source, meta.decrypted_path, meta.secret_key, meta.meta_for_decrypt)
+        case "aes-ctr":
+            encrypt_aes.decrypt_aes_ctr(meta.source, meta.decrypted_path, meta.secret_key, meta.meta_for_decrypt)
