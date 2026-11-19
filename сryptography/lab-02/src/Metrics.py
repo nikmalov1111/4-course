@@ -21,14 +21,19 @@ def calculate_psnr_and_ssim(original_path: str, stego_path: str):
     parser_orig = PNGParser(original_path)
     parser_stego = PNGParser(stego_path)
 
-    img_orig = np.array(parser_orig.get_pixels(), dtype=np.float64)
-    img_stego = np.array(parser_stego.get_pixels(), dtype=np.float64)
+    width = parser_orig.get_width()
+    height = parser_orig.get_height()
+    planes = parser_orig.meta.get('planes', 3)
+    
+    img_orig = np.array(parser_orig.get_pixels(), dtype=np.float64).reshape((height, width, planes))
+    img_stego = np.array(parser_stego.get_pixels(), dtype=np.float64).reshape((height, width, planes))
 
+    
     if img_orig.shape != img_stego.shape:
         raise ValueError("размеры изображений не совпадают")
 
     psnr_val = peak_signal_noise_ratio(img_orig, img_stego, data_range=255)
-    ssim_val = structural_similarity(img_orig, img_stego, data_range=255)
+    ssim_val = structural_similarity(img_orig, img_stego, data_range=255, channel_axis=-1)
 
     return psnr_val, ssim_val
 
