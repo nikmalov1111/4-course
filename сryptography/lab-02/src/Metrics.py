@@ -84,11 +84,14 @@ def chi_square_test(image_path: str):
         n_2k = counts[2 * k]
         n_2k1 = counts[2 * k + 1]
         expected = (n_2k + n_2k1) / 2.0
-        f_obs.extend([n_2k, n_2k1])
-        f_exp.extend([expected, expected])
+        if expected > 0:
+            f_obs.extend([n_2k, n_2k1])
+            f_exp.extend([expected, expected])
+
     f_obs = np.array(f_obs)
     f_exp = np.array(f_exp)
-    chi2, p_value = stats.chisquare(f_obs, f_exp)
+    ddof = len(f_obs) // 2
+    chi2, p_value = stats.chisquare(f_obs, f_exp, ddof=ddof)
 
     return chi2, p_value
 
