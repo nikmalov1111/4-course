@@ -2,7 +2,7 @@ import os
 import random
 import string
 import numpy as np
-import plt
+import matplotlib.pyplot as plt
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 from scipy import stats
 from PNGParser import PNGParser
